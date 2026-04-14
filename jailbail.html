@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WANTED — Put Someone Behind Bars!</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Bebas+Neue&family=Share+Tech+Mono&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+/* ── GLOBAL ── */
+:root {
+  --cream: #f5f0e8; --paper: #ede7d9; --dark-bg: #1a1008;
+  --brown: #3d2b1f; --red: #c0392b; --gold: #c8960c; --gold-light: #f0b429;
+  --ink: #2c1810;
+  --adm-black: #0a0a0a; --adm-dark: #111; --adm-panel: #161616;
+  --adm-border: #2a2a2a; --adm-yellow: #f5c800; --adm-red: #e63232;
+  --adm-green: #1db954; --adm-orange: #f59e0b; --adm-text: #e8e8e8;
+  --adm-muted: #666;
+  --mono: 'Share Tech Mono', monospace;
+  --display: 'Bebas Neue', sans-serif;
+  --cond: 'Barlow Condensed', sans-serif;
+  --PRICE: 5;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { min-height: 100vh; overflow-x: hidden; }
+
+/* ── SCREENS ── */
+#screen-customer { display: flex; }
+#screen-pin      { display: none; }
+#screen-admin    { display: none; }
+
+/* ════════════════════════════════════════
+   CUSTOMER SCREEN
+════════════════════════════════════════ */
+#screen-customer {
+  background: var(--dark-bg);
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px 60px;
+  position: relative;
+  min-height: 100vh;
+}
+
+#screen-customer::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    repeating-linear-gradient(180deg, transparent 0px, transparent 48px, rgba(0,0,0,0.15) 48px, rgba(0,0,0,0.15) 52px),
+    linear-gradient(160deg, #1a1008 0%, #2d1e0f 40%, #1a1008 100%);
+  z-index: 0;
+}
+
+.c-stars {
+  position: fixed; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between;
+  padding: 20px 40px; z-index: 1; pointer-events: none;
+}
+.c-star { font-size: 1.8rem; opacity: 0.3; }
+
+.poster {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 560px;
+  background: var(--cream);
+  border: 6px solid var(--gold);
+  box-shadow: 0 0 0 2px var(--dark-bg), 0 0 0 4px var(--gold), 0 20px 60px rgba(0,0,0,0.7), inset 0 0 40px rgba(200,150,12,0.06);
+  overflow: hidden;
+}
+
+.poster::after {
+  content: ''; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 10;
+}
+
+/* Secret tap zone on the WANTED text */
+.poster-header {
+  background: var(--red); padding: 16px 24px 12px;
+  text-align: center; position: relative;
+  border-bottom: 4px solid var(--ink); cursor: default;
+  user-select: none;
+}
+.poster-header::before, .poster-header::after {
+  content: '★  ★  ★'; display: block;
+  font-size: 0.7rem; letter-spacing: 8px;
+  color: rgba(255,255,255,0.5); margin-bottom: 4px;
+}
+.poster-header::after { margin-bottom: 0; margin-top: 4px; }
+.poster-header h1 {
+  font-family: 'Alfa Slab One', serif; font-size: 3.2rem;
+  color: var(--cream); letter-spacing: 6px;
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.4); line-height: 1;
+}
+
+.reward-banner {
+  background: var(--gold); color: var(--ink);
+  text-align: center; padding: 10px;
+  font-family: 'Alfa Slab One', serif; font-size: 1rem;
+  letter-spacing: 3px; border-bottom: 3px solid var(--ink);
+}
+.reward-banner span { font-size: 1.4rem; display: block; letter-spacing: 2px; }
+
+.poster-body {
+  padding: 28px 32px 32px;
+  display: flex; flex-direction: column; gap: 22px;
+  position: relative;
+}
+
+.c-field { display: flex; flex-direction: column; gap: 6px; }
+.c-label {
+  font-family: 'Alfa Slab One', serif; font-size: 0.75rem;
+  letter-spacing: 3px; color: var(--brown); text-transform: uppercase;
+}
+.c-input, .c-textarea {
+  background: var(--paper); border: 2px solid var(--brown);
+  color: var(--ink); font-family: 'Barlow', sans-serif;
+  font-size: 1.1rem; font-weight: 600;
+  padding: 12px 14px; width: 100%; outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  -webkit-appearance: none; border-radius: 0;
+}
+.c-input:focus, .c-textarea:focus { border-color: var(--red); background: #fff; }
+.c-input::placeholder, .c-textarea::placeholder { font-weight: 400; color: #9a8060; font-style: italic; }
+.c-textarea { resize: none; height: 90px; font-size: 1rem; }
+
+.c-divider {
+  display: flex; align-items: center; gap: 12px;
+  color: var(--brown); opacity: 0.4;
+}
+.c-divider::before, .c-divider::after { content: ''; flex: 1; height: 1px; background: var(--brown); }
+.c-divider span { font-family: 'Alfa Slab One', serif; font-size: 0.7rem; letter-spacing: 3px; white-space: nowrap; }
+
+.price-note {
+  background: var(--ink); color: var(--gold-light);
+  font-family: 'Alfa Slab One', serif; font-size: 0.85rem;
+  letter-spacing: 2px; text-align: center; padding: 10px;
+}
+.price-note::before { content: '⚠ '; }
+
+.submit-btn {
+  background: var(--red); color: var(--cream);
+  border: 3px solid var(--ink); font-family: 'Alfa Slab One', serif;
+  font-size: 1.5rem; letter-spacing: 4px; padding: 18px; width: 100%;
+  cursor: pointer; text-transform: uppercase; transition: all 0.15s;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.submit-btn:hover { background: #a93226; transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--ink); }
+.submit-btn:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--ink); }
+
+.field-error { font-size: 0.8rem; color: var(--red); font-style: italic; display: none; }
+.field-error.show { display: block; }
+
+/* Success */
+.success-screen { display: none; text-align: center; padding: 40px 24px; flex-direction: column; align-items: center; gap: 16px; }
+.success-screen.show { display: flex; }
+.mugshot-box {
+  width: 120px; height: 140px; background: var(--paper);
+  border: 3px solid var(--ink); display: flex;
+  flex-direction: column; align-items: center; justify-content: center;
+  font-size: 3.5rem; position: relative; box-shadow: 4px 4px 0 var(--ink);
+}
+.mugshot-box::after {
+  content: attr(data-id); position: absolute;
+  bottom: -1px; left: -1px; right: -1px;
+  background: var(--ink); color: var(--gold-light);
+  font-family: 'Alfa Slab One', serif; font-size: 0.65rem;
+  letter-spacing: 2px; padding: 3px; text-align: center;
+}
+.success-title { font-family: 'Alfa Slab One', serif; font-size: 2rem; color: var(--red); letter-spacing: 3px; line-height: 1.1; }
+.success-name { font-family: 'Alfa Slab One', serif; font-size: 1.4rem; color: var(--ink); }
+.success-sub { font-size: 1rem; color: var(--brown); line-height: 1.5; max-width: 320px; font-style: italic; }
+
+/* Status tracker */
+.status-tracker {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; padding: 16px 20px;
+  background: var(--paper); border-top: 2px solid var(--brown);
+}
+.st-step {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; flex: 1;
+}
+.st-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--brown); background: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; transition: all 0.3s;
+}
+.st-dot.done { background: var(--red); border-color: var(--red); color: white; }
+.st-dot.active { background: var(--gold); border-color: var(--gold); color: var(--ink); animation: stepPulse 1.5s infinite; }
+@keyframes stepPulse { 0%,100%{box-shadow:0 0 0 0 rgba(200,150,12,0.4)} 50%{box-shadow:0 0 0 6px rgba(200,150,12,0)} }
+.st-line { flex: 1; height: 2px; background: var(--brown); opacity: 0.3; margin: 0 -2px; margin-top: -18px; z-index: 0; }
+.st-label { font-family: 'Alfa Slab One', serif; font-size: 0.55rem; letter-spacing: 1px; color: var(--brown); text-align: center; }
+
+.another-btn {
+  background: var(--ink); color: var(--gold-light); border: none;
+  font-family: 'Alfa Slab One', serif; font-size: 1rem;
+  letter-spacing: 3px; padding: 14px 28px; cursor: pointer;
+  transition: background 0.15s; margin-top: 8px;
+}
+.another-btn:hover { background: var(--brown); }
+
+/* Ticker */
+.ticker-wrap { position: relative; z-index: 2; width: 100%; max-width: 560px; margin-top: 20px; overflow: hidden; }
+.ticker-label { font-family: 'Alfa Slab One', serif; font-size: 0.65rem; letter-spacing: 3px; color: var(--gold); opacity: 0.6; text-align: center; margin-bottom: 8px; text-transform: uppercase; }
+.ticker { background: rgba(0,0,0,0.5); border: 1px solid rgba(200,150,12,0.3); padding: 10px 16px; overflow: hidden; white-space: nowrap; }
+.ticker-inner { display: inline-flex; gap: 40px; animation: tickerAnim 25s linear infinite; white-space: nowrap; }
+@keyframes tickerAnim { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+.ticker-item { font-family: 'Alfa Slab One', serif; font-size: 0.8rem; letter-spacing: 2px; color: var(--gold-light); flex-shrink: 0; }
+.ticker-item .tn { color: white; }
+
+/* ════════════════════════════════════════
+   PIN SCREEN
+════════════════════════════════════════ */
+#screen-pin {
+  background: var(--adm-black);
+  min-height: 100vh; align-items: center; justify-content: center;
+  flex-direction: column; gap: 0;
+}
+
+.pin-box {
+  background: var(--adm-panel);
+  border: 1px solid var(--adm-border);
+  border-top: 4px solid var(--adm-yellow);
+  padding: 40px; width: 320px;
+  display: flex; flex-direction: column; gap: 24px;
+  align-items: center;
+}
+.pin-title { font-family: var(--display); font-size: 1.6rem; letter-spacing: 4px; color: var(--adm-yellow); text-align: center; }
+.pin-sub { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; color: var(--adm-muted); text-align: center; text-transform: uppercase; }
+.pin-input {
+  background: var(--adm-dark); border: 1px solid var(--adm-border);
+  color: var(--adm-yellow); font-family: var(--mono); font-size: 1.8rem;
+  letter-spacing: 8px; text-align: center; padding: 14px;
+  width: 100%; outline: none; transition: border-color 0.15s;
+}
+.pin-input:focus { border-color: var(--adm-yellow); }
+.pin-input.error { border-color: var(--adm-red); animation: shake 0.4s; color: var(--adm-red); }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }
+.pin-btn {
+  background: var(--adm-yellow); color: var(--adm-black);
+  font-family: var(--display); font-size: 1.2rem; letter-spacing: 3px;
+  border: none; padding: 12px; width: 100%; cursor: pointer; transition: background 0.1s;
+}
+.pin-btn:hover { background: #ffd700; }
+.pin-back {
+  background: transparent; border: none; color: var(--adm-muted);
+  font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px;
+  cursor: pointer; transition: color 0.1s; text-transform: uppercase;
+}
+.pin-back:hover { color: var(--adm-text); }
+.pin-error { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 1px; color: var(--adm-red); min-height: 16px; text-align: center; }
+
+/* ════════════════════════════════════════
+   ADMIN SCREEN
+════════════════════════════════════════ */
+#screen-admin {
+  background: var(--adm-black);
+  color: var(--adm-text); font-family: var(--cond);
+  min-height: 100vh; flex-direction: column;
+}
+
+#screen-admin::before {
+  content: ''; position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none; z-index: 9999;
+}
+
+/* Admin Header */
+.adm-header {
+  background: var(--adm-yellow); color: var(--adm-black);
+  padding: 10px 24px; display: flex; align-items: center;
+  justify-content: space-between; border-bottom: 4px solid var(--adm-black);
+  position: sticky; top: 0; z-index: 200; flex-shrink: 0;
+}
+.adm-header-left { display: flex; align-items: baseline; gap: 12px; }
+.adm-header h1 { font-family: var(--display); font-size: 2rem; letter-spacing: 3px; line-height: 1; }
+.adm-tag { font-family: var(--mono); font-size: 0.65rem; background: var(--adm-black); color: var(--adm-yellow); padding: 3px 8px; letter-spacing: 2px; }
+.adm-header-right { display: flex; align-items: center; gap: 12px; }
+.adm-clock { font-family: var(--mono); font-size: 1.2rem; letter-spacing: 3px; background: var(--adm-black); color: var(--adm-yellow); padding: 5px 12px; }
+.pending-alert { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 1px; background: var(--adm-red); color: white; padding: 5px 12px; display: none; animation: blink 1.2s infinite; }
+.pending-alert.show { display: block; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.logout-btn { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 1px; background: transparent; border: 1px solid rgba(0,0,0,0.3); color: var(--adm-black); padding: 5px 10px; cursor: pointer; opacity: 0.6; transition: opacity 0.15s; text-transform: uppercase; }
+.logout-btn:hover { opacity: 1; }
+
+/* Admin Layout */
+.adm-layout { display: grid; grid-template-columns: 360px 1fr; flex: 1; min-height: calc(100vh - 56px); }
+
+/* Sidebar */
+.adm-sidebar { background: var(--adm-panel); border-right: 2px solid var(--adm-border); display: flex; flex-direction: column; overflow-y: auto; }
+.adm-section { border-bottom: 1px solid var(--adm-border); padding: 18px; }
+.adm-section-title { font-family: var(--display); font-size: 1.1rem; letter-spacing: 3px; color: var(--adm-yellow); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.adm-section-title::before { content: '▮'; font-size: 0.7rem; }
+
+/* Stats */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.stat-card { background: var(--adm-dark); border: 1px solid var(--adm-border); padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; }
+.stat-card.hl { border-color: var(--adm-yellow); background: rgba(245,200,0,0.06); }
+.stat-card.rd { border-color: var(--adm-red); background: rgba(230,50,50,0.06); }
+.stat-card.gn { border-color: var(--adm-green); background: rgba(29,185,84,0.06); }
+.s-val { font-family: var(--display); font-size: 2rem; line-height: 1; color: var(--adm-yellow); }
+.stat-card.rd .s-val { color: var(--adm-red); }
+.stat-card.gn .s-val { color: var(--adm-green); }
+.s-lbl { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 2px; color: var(--adm-muted); text-transform: uppercase; }
+
+/* Form */
+.a-fg { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.a-lbl { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; color: var(--adm-muted); text-transform: uppercase; }
+.a-inp, .a-sel {
+  background: var(--adm-dark); border: 1px solid var(--adm-border);
+  color: var(--adm-text); font-family: var(--cond); font-size: 1rem;
+  font-weight: 600; padding: 9px 12px; width: 100%; outline: none;
+  transition: border-color 0.15s; -webkit-appearance: none;
+}
+.a-inp:focus, .a-sel:focus { border-color: var(--adm-yellow); }
+.a-inp::placeholder { color: var(--adm-muted); font-weight: 400; }
+.a-sel option { background: var(--adm-dark); }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.id-display { font-family: var(--mono); font-size: 1.4rem; color: var(--adm-yellow); background: var(--adm-dark); border: 1px solid var(--adm-border); padding: 9px 12px; letter-spacing: 3px; }
+.a-btn { font-family: var(--display); font-size: 1.1rem; letter-spacing: 3px; border: none; padding: 12px; cursor: pointer; width: 100%; transition: all 0.1s; text-transform: uppercase; }
+.a-btn-book { background: var(--adm-yellow); color: var(--adm-black); }
+.a-btn-book:hover { background: #ffd700; }
+
+/* Deputies */
+.dep-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.dep-item { display: flex; align-items: center; gap: 8px; background: var(--adm-dark); border: 1px solid var(--adm-border); padding: 8px 12px; }
+.dep-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--adm-green); flex-shrink: 0; }
+.dep-name { flex: 1; font-family: var(--mono); font-size: 0.8rem; letter-spacing: 1px; }
+.dep-count { font-family: var(--mono); font-size: 0.7rem; color: var(--adm-muted); }
+.dep-rm { background: transparent; border: none; color: var(--adm-muted); cursor: pointer; font-size: 0.9rem; padding: 2px 4px; transition: color 0.1s; }
+.dep-rm:hover { color: var(--adm-red); }
+.add-row { display: flex; gap: 6px; }
+.add-row .a-inp { flex: 1; }
+.btn-add { background: transparent; border: 1px solid var(--adm-yellow); color: var(--adm-yellow); font-family: var(--mono); font-size: 0.75rem; letter-spacing: 1px; padding: 8px 12px; cursor: pointer; white-space: nowrap; transition: all 0.15s; flex-shrink: 0; }
+.btn-add:hover { background: var(--adm-yellow); color: var(--adm-black); }
+
+/* Main */
+.adm-main { display: flex; flex-direction: column; overflow: hidden; }
+
+/* Tabs */
+.tab-bar { background: var(--adm-panel); border-bottom: 2px solid var(--adm-border); display: flex; padding: 0 20px; }
+.tab { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 2px; color: var(--adm-muted); padding: 14px 18px; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; text-transform: uppercase; white-space: nowrap; display: flex; align-items: center; gap: 8px; background: transparent; border-top: none; border-left: none; border-right: none; }
+.tab:hover { color: var(--adm-text); }
+.tab.active { color: var(--adm-yellow); border-bottom-color: var(--adm-yellow); }
+.tab-badge { background: var(--adm-red); color: white; font-size: 0.6rem; padding: 1px 6px; border-radius: 10px; min-width: 18px; text-align: center; }
+
+.tab-content { flex: 1; overflow-y: auto; display: none; flex-direction: column; }
+.tab-content.active { display: flex; }
+
+/* Pending cards */
+.queue-header { padding: 12px 20px; background: var(--adm-panel); border-bottom: 1px solid var(--adm-border); font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; color: var(--adm-muted); text-transform: uppercase; }
+
+.p-card { margin: 10px 16px 0; background: var(--adm-panel); border: 1px solid var(--adm-border); animation: cardIn 0.3s ease; overflow: hidden; }
+.p-card.stage-pending  { border-left: 4px solid var(--adm-orange); }
+.p-card.stage-warrant  { border-left: 4px solid var(--adm-yellow); }
+@keyframes cardIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+
+.p-card-top { padding: 12px 14px; display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.p-name { font-family: var(--display); font-size: 1.4rem; letter-spacing: 2px; line-height: 1; }
+.p-meta { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 1px; color: var(--adm-muted); margin-top: 3px; }
+.p-meta span { color: var(--adm-text); }
+.p-reason { font-size: 0.85rem; color: var(--adm-muted); font-style: italic; padding: 0 14px 8px; }
+
+/* Warrant progress bar */
+.p-progress { display: flex; padding: 0 14px 10px; gap: 4px; }
+.p-prog-step { flex: 1; height: 3px; background: var(--adm-border); transition: background 0.3s; }
+.p-prog-step.done { background: var(--adm-yellow); }
+.p-prog-step.active { background: var(--adm-orange); }
+
+.p-actions { display: flex; border-top: 1px solid var(--adm-border); }
+.p-sel { flex: 1; padding: 8px 10px; background: var(--adm-dark); border: none; border-right: 1px solid var(--adm-border); color: var(--adm-text); font-family: var(--cond); font-size: 0.9rem; outline: none; -webkit-appearance: none; cursor: pointer; }
+.p-sel option { background: var(--adm-dark); }
+.p-act-btn { font-family: var(--display); font-size: 0.85rem; letter-spacing: 2px; border: none; padding: 10px 14px; cursor: pointer; transition: background 0.1s; white-space: nowrap; }
+.btn-warrant { background: var(--adm-yellow); color: var(--adm-black); }
+.btn-warrant:hover { background: #ffd700; }
+.btn-confirm-arrest { background: var(--adm-green); color: var(--adm-black); }
+.btn-confirm-arrest:hover { background: #25e868; }
+.btn-dismiss { background: transparent; color: var(--adm-muted); border-left: 1px solid var(--adm-border) !important; font-size: 1rem; }
+.btn-dismiss:hover { color: var(--adm-red); }
+
+.empty-q { text-align: center; padding: 50px 20px; color: var(--adm-muted); }
+.empty-q .ico { font-size: 2.5rem; display: block; margin-bottom: 10px; opacity: 0.3; }
+.empty-q p { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; }
+
+/* Table */
+.filter-bar { background: var(--adm-panel); border-bottom: 1px solid var(--adm-border); padding: 10px 20px; display: flex; gap: 6px; flex-wrap: wrap; flex-shrink: 0; }
+.flt { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 1px; background: transparent; border: 1px solid var(--adm-border); color: var(--adm-muted); padding: 5px 12px; cursor: pointer; transition: all 0.15s; text-transform: uppercase; }
+.flt.active { border-color: var(--adm-yellow); color: var(--adm-yellow); }
+.flt:hover { border-color: var(--adm-text); color: var(--adm-text); }
+
+.tbl-wrap { flex: 1; overflow-y: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead th { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 2px; color: var(--adm-muted); text-transform: uppercase; padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--adm-border); background: var(--adm-panel); position: sticky; top: 0; z-index: 10; }
+tbody tr { border-bottom: 1px solid var(--adm-border); transition: background 0.1s; animation: cardIn 0.25s ease; }
+tbody tr:hover { background: var(--adm-panel); }
+tbody tr.row-overdue { background: rgba(230,50,50,0.07); }
+tbody tr.row-faded { opacity: 0.4; }
+td { padding: 9px 12px; vertical-align: middle; }
+.td-id { font-family: var(--mono); font-size: 0.78rem; color: var(--adm-yellow); letter-spacing: 2px; white-space: nowrap; }
+.td-name { font-size: 1rem; font-weight: 700; }
+.td-sub { font-size: 0.72rem; color: var(--adm-muted); font-style: italic; }
+.td-dep { font-family: var(--mono); font-size: 0.72rem; color: var(--adm-muted); }
+.td-t { font-family: var(--mono); font-size: 0.78rem; white-space: nowrap; }
+.td-cd { font-family: var(--mono); font-size: 0.88rem; font-weight: bold; white-space: nowrap; }
+.cd-ok{color:var(--adm-green)} .cd-warn{color:var(--adm-yellow)} .cd-over{color:var(--adm-red);animation:blink 1s infinite}
+
+.pill { display: inline-block; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 1px; padding: 3px 7px; border: 1px solid; text-transform: uppercase; white-space: nowrap; }
+.pill-pending  { border-color: var(--adm-orange); color: var(--adm-orange); }
+.pill-warrant  { border-color: var(--adm-yellow); color: var(--adm-yellow); }
+.pill-jailed   { border-color: var(--adm-red); color: var(--adm-red); }
+.pill-overdue  { border-color: var(--adm-red); color: var(--adm-red); background: rgba(230,50,50,0.15); }
+.pill-bailed   { border-color: var(--adm-green); color: var(--adm-green); }
+.pill-released { border-color: var(--adm-border); color: var(--adm-muted); }
+
+.acts { display: flex; gap: 4px; flex-wrap: wrap; }
+.ab { font-family: var(--display); font-size: 0.72rem; letter-spacing: 1px; border: 1px solid; padding: 4px 9px; cursor: pointer; background: transparent; transition: all 0.1s; white-space: nowrap; }
+.ab-rel { border-color: var(--adm-green); color: var(--adm-green); }
+.ab-rel:hover { background: var(--adm-green); color: var(--adm-black); }
+.ab-bail { border-color: var(--adm-yellow); color: var(--adm-yellow); }
+.ab-bail:hover { background: var(--adm-yellow); color: var(--adm-black); }
+.ab-print { border-color: var(--adm-border); color: var(--adm-muted); }
+.ab-print:hover { border-color: var(--adm-text); color: var(--adm-text); }
+
+/* Footer stats */
+.stats-footer { background: var(--adm-panel); border-top: 2px solid var(--adm-border); padding: 10px 20px; display: flex; gap: 24px; flex-shrink: 0; }
+.sf-stat { display: flex; flex-direction: column; gap: 1px; }
+.sf-val { font-family: var(--display); font-size: 1.4rem; color: var(--adm-yellow); line-height: 1; }
+.sf-lbl { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 2px; color: var(--adm-muted); text-transform: uppercase; }
+
+/* Toast */
+.toast { position: fixed; bottom: 20px; right: 20px; font-family: var(--mono); font-size: 0.8rem; letter-spacing: 1px; padding: 10px 18px; z-index: 99999; transform: translateY(60px); opacity: 0; transition: all 0.3s; pointer-events: none; }
+.toast.customer { background: var(--gold-light); color: var(--ink); }
+.toast.admin { background: var(--adm-yellow); color: var(--adm-black); }
+.toast.show { transform: translateY(0); opacity: 1; }
+
+#print-frame { display: none; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--adm-dark); }
+::-webkit-scrollbar-thumb { background: var(--adm-border); }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     CUSTOMER SCREEN
+════════════════════════════════════ -->
+<div id="screen-customer">
+  <div class="c-stars">
+    <span class="c-star">★</span><span class="c-star">★</span>
+    <span class="c-star">★</span><span class="c-star">★</span><span class="c-star">★</span>
+  </div>
+
+  <div class="poster">
+    <!-- Tap WANTED 5x quickly to open PIN screen -->
+    <div class="poster-header" id="secret-tap-zone">
+      <h1>WANTED</h1>
+    </div>
+
+    <div class="reward-banner">
+      PUT A FRIEND BEHIND BARS
+      <span>ONLY $5 TO ARREST · $5 TO BAIL OUT</span>
+    </div>
+
+    <!-- Form -->
+    <div class="poster-body" id="c-form-body">
+      <div style="text-align:center;font-size:1rem;color:var(--brown);font-style:italic;line-height:1.5;">
+        Fill in the details and our deputies will make the arrest.
+        Your friend gets locked up for <strong>15 minutes</strong> — unless bailed out!
+      </div>
+
+      <div class="c-divider"><span>THE SUSPECT</span></div>
+
+      <div class="c-field">
+        <label class="c-label">Suspect's Name *</label>
+        <input class="c-input" id="c-suspect" placeholder="Who are you arresting?" autocomplete="off" maxlength="40"/>
+        <span class="field-error" id="err-suspect">Please enter the suspect's name</span>
+      </div>
+
+      <div class="c-divider"><span>THE ARRESTING PARTY</span></div>
+
+      <div class="c-field">
+        <label class="c-label">Your Name *</label>
+        <input class="c-input" id="c-arrester" placeholder="Your name..." autocomplete="off" maxlength="40"/>
+        <span class="field-error" id="err-arrester">Please enter your name</span>
+      </div>
+
+      <div class="c-field">
+        <label class="c-label">Reason for Arrest <span style="font-family:Barlow,sans-serif;font-weight:400;opacity:0.6">(optional)</span></label>
+        <textarea class="c-textarea" id="c-reason" placeholder="e.g. Being too good looking, stealing the last slice..."></textarea>
+      </div>
+
+      <div class="price-note">ARREST FEE: $5.00 — PAY AT THE MAIN DESK</div>
+
+      <button class="submit-btn" onclick="customerSubmit()">🚔 &nbsp;MAKE THE ARREST</button>
+    </div>
+
+    <!-- Success -->
+    <div class="success-screen" id="c-success">
+      <div class="mugshot-box" id="c-mugshot" data-id="#0000">🚔</div>
+      <div class="success-title">WARRANT<br>ISSUED!</div>
+      <div class="success-name" id="c-success-name"></div>
+      <div class="success-sub">
+        A deputy will make the arrest shortly.
+        Head to the <strong>main desk</strong> to pay the $5 arrest fee!
+      </div>
+
+      <!-- Live status tracker -->
+      <div class="status-tracker" id="c-tracker">
+        <div class="st-step">
+          <div class="st-dot done" id="st0">✓</div>
+          <div class="st-label">SUBMITTED</div>
+        </div>
+        <div class="st-line"></div>
+        <div class="st-step">
+          <div class="st-dot" id="st1">2</div>
+          <div class="st-label">WARRANT<br>ISSUED</div>
+        </div>
+        <div class="st-line"></div>
+        <div class="st-step">
+          <div class="st-dot" id="st2">3</div>
+          <div class="st-label">ARRESTED</div>
+        </div>
+      </div>
+
+      <button class="another-btn" onclick="resetCustomerForm()">⚖ ARREST SOMEONE ELSE</button>
+    </div>
+  </div>
+
+  <!-- Ticker -->
+  <div class="ticker-wrap" id="c-ticker-wrap" style="display:none">
+    <div class="ticker-label">⚡ RECENT ARRESTS ⚡</div>
+    <div class="ticker"><div class="ticker-inner" id="c-ticker-inner"></div></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     PIN SCREEN
+════════════════════════════════════ -->
+<div id="screen-pin" style="display:none;min-height:100vh;background:var(--adm-black);align-items:center;justify-content:center;flex-direction:column;">
+  <div class="pin-box">
+    <div class="pin-title">🔒 ADMIN ACCESS</div>
+    <div class="pin-sub">Enter PIN to continue</div>
+    <input class="pin-input" id="pin-input" type="password" maxlength="12" placeholder="••••••••"
+      onkeydown="if(event.key==='Enter') checkPin()" autocomplete="off" />
+    <div class="pin-error" id="pin-error"></div>
+    <button class="pin-btn" onclick="checkPin()">UNLOCK</button>
+    <button class="pin-back" onclick="showCustomer()">← Back to event page</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     ADMIN SCREEN
+════════════════════════════════════ -->
+<div id="screen-admin" style="display:none;">
+
+  <div class="adm-header">
+    <div class="adm-header-left">
+      <h1>⚖ JAIL DESK</h1>
+      <span class="adm-tag">ADMIN</span>
+    </div>
+    <div class="adm-header-right">
+      <div class="pending-alert" id="adm-alert">⚠ NEW REQUESTS</div>
+      <div class="adm-clock" id="adm-clock">00:00:00</div>
+      <button class="logout-btn" onclick="logout()">← EXIT</button>
+    </div>
+  </div>
+
+  <div class="adm-layout">
+
+    <!-- Sidebar -->
+    <div class="adm-sidebar">
+
+      <div class="adm-section">
+        <div class="adm-section-title">TOTALS</div>
+        <div class="stats-grid">
+          <div class="stat-card gn"><div class="s-val" id="s-raised">$0</div><div class="s-lbl">Total Raised</div></div>
+          <div class="stat-card hl"><div class="s-val" id="s-total">0</div><div class="s-lbl">Total Arrests</div></div>
+          <div class="stat-card"><div class="s-val" id="s-active">0</div><div class="s-lbl">In Custody</div></div>
+          <div class="stat-card rd"><div class="s-val" id="s-overdue">0</div><div class="s-lbl">Overdue</div></div>
+        </div>
+      </div>
+
+      <div class="adm-section">
+        <div class="adm-section-title">MANUAL BOOKING</div>
+        <div class="a-fg"><label class="a-lbl">Arrestee Name</label><input class="a-inp" id="m-name" placeholder="Name..." autocomplete="off"/></div>
+        <div class="a-fg"><label class="a-lbl">Reason <span style="opacity:0.5">(optional)</span></label><input class="a-inp" id="m-reason" placeholder="Reason..."/></div>
+        <div class="two-col">
+          <div class="a-fg"><label class="a-lbl">Deputy</label><select class="a-sel" id="m-deputy"><option value="">— None —</option></select></div>
+          <div class="a-fg"><label class="a-lbl">Next ID</label><div class="id-display" id="m-next-id">#0001</div></div>
+        </div>
+        <button class="a-btn a-btn-book" onclick="manualBook()">🚔 &nbsp;BOOK NOW</button>
+      </div>
+
+      <div class="adm-section">
+        <div class="adm-section-title">DEPUTIES</div>
+        <div class="dep-list" id="dep-list"></div>
+        <div class="add-row">
+          <input class="a-inp" id="new-deputy" placeholder="Deputy name..." maxlength="30" onkeydown="if(event.key==='Enter')addDeputy()"/>
+          <button class="btn-add" onclick="addDeputy()">+ ADD</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Main panel -->
+    <div class="adm-main">
+      <div class="tab-bar">
+        <button class="tab active" onclick="switchTab('pending',this)">QUEUE <span class="tab-badge" id="tb-pending">0</span></button>
+        <button class="tab" onclick="switchTab('active',this)">IN CUSTODY</button>
+        <button class="tab" onclick="switchTab('all',this)">ALL ARRESTS</button>
+      </div>
+
+      <!-- Pending tab -->
+      <div class="tab-content active" id="tab-pending">
+        <div class="queue-header">Pending requests — assign deputy → issue warrant → confirm arrest</div>
+        <div id="pending-list" style="padding-bottom:20px;flex:1;overflow-y:auto;"></div>
+      </div>
+
+      <!-- Active tab -->
+      <div class="tab-content" id="tab-active">
+        <div class="filter-bar">
+          <button class="flt active" onclick="setFlt('jailed',this,'active')">In Custody</button>
+          <button class="flt" onclick="setFlt('overdue',this,'active')">Overdue</button>
+        </div>
+        <div class="tbl-wrap">
+          <table><thead><tr>
+            <th>ID</th><th>Name</th><th>Deputy</th><th>Booked</th><th>Release</th><th>Countdown</th><th>Status</th><th>Actions</th>
+          </tr></thead><tbody id="active-tbody"></tbody></table>
+        </div>
+        <div class="stats-footer" id="active-footer"></div>
+      </div>
+
+      <!-- All tab -->
+      <div class="tab-content" id="tab-all">
+        <div class="filter-bar">
+          <button class="flt active" onclick="setFlt('all',this,'all')">All</button>
+          <button class="flt" onclick="setFlt('jailed',this,'all')">Jailed</button>
+          <button class="flt" onclick="setFlt('bailed',this,'all')">Bailed</button>
+          <button class="flt" onclick="setFlt('released',this,'all')">Released</button>
+          <button class="flt" onclick="setFlt('pending',this,'all')">Pending</button>
+          <button class="flt" onclick="setFlt('warrant',this,'all')">Warrant</button>
+        </div>
+        <div class="tbl-wrap">
+          <table><thead><tr>
+            <th>ID</th><th>Name</th><th>Arrested By</th><th>Deputy</th><th>Booked</th><th>Release</th><th>Status</th><th>Actions</th>
+          </tr></thead><tbody id="all-tbody"></tbody></table>
+        </div>
+        <div class="stats-footer" id="all-footer"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<iframe id="print-frame"></iframe>
+
+<script>
+const PIN = 'FTK2026';
+const PRICE = 5;
+const JAIL_MINS = 15;
+
+// ── State ──────────────────────────────────────────
+let deputies = JSON.parse(localStorage.getItem('deputies') || '[]');
+let activeFlt = 'jailed';
+let allFlt = 'all';
+let currentTab = 'pending';
+let currentSuccessId = null;
+
+// ── Storage ────────────────────────────────────────
+function getArrests() { return JSON.parse(localStorage.getItem('arrests') || '[]'); }
+function saveArrests(a) { localStorage.setItem('arrests', JSON.stringify(a)); }
+function getNextId() { return '#' + String(getArrests().length + 1).padStart(4, '0'); }
+function fmt(iso) { return new Date(iso).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}); }
+
+// ── Screen routing ─────────────────────────────────
+function showCustomer() {
+  document.getElementById('screen-customer').style.display = 'flex';
+  document.getElementById('screen-pin').style.display = 'none';
+  document.getElementById('screen-admin').style.display = 'none';
+}
+function showPin() {
+  document.getElementById('screen-customer').style.display = 'none';
+  document.getElementById('screen-pin').style.display = 'flex';
+  document.getElementById('screen-admin').style.display = 'none';
+  document.getElementById('pin-input').value = '';
+  document.getElementById('pin-error').textContent = '';
+  setTimeout(() => document.getElementById('pin-input').focus(), 100);
+}
+function showAdmin() {
+  document.getElementById('screen-customer').style.display = 'none';
+  document.getElementById('screen-pin').style.display = 'none';
+  document.getElementById('screen-admin').style.display = 'flex';
+  document.getElementById('screen-admin').style.flexDirection = 'column';
+  renderAdmin();
+}
+function logout() { showCustomer(); }
+
+// ── Secret tap zone (tap WANTED header 5x within 3s) ──
+let tapCount = 0, tapTimer = null;
+document.getElementById('secret-tap-zone').addEventListener('click', () => {
+  tapCount++;
+  clearTimeout(tapTimer);
+  if (tapCount >= 5) { tapCount = 0; showPin(); return; }
+  tapTimer = setTimeout(() => { tapCount = 0; }, 3000);
+});
+
+// ── PIN check ─────────────────────────────────────
+function checkPin() {
+  const val = document.getElementById('pin-input').value;
+  if (val === PIN) {
+    showAdmin();
+  } else {
+    const inp = document.getElementById('pin-input');
+    inp.classList.add('error');
+    document.getElementById('pin-error').textContent = 'Incorrect PIN — try again';
+    setTimeout(() => { inp.classList.remove('error'); inp.value = ''; inp.focus(); }, 800);
+  }
+}
+
+// ── Customer submit ────────────────────────────────
+function customerSubmit() {
+  const suspect  = document.getElementById('c-suspect').value.trim();
+  const arrester = document.getElementById('c-arrester').value.trim();
+  const reason   = document.getElementById('c-reason').value.trim();
+  let ok = true;
+
+  if (!suspect)  { document.getElementById('err-suspect').classList.add('show');  ok = false; }
+  else             document.getElementById('err-suspect').classList.remove('show');
+  if (!arrester) { document.getElementById('err-arrester').classList.add('show'); ok = false; }
+  else             document.getElementById('err-arrester').classList.remove('show');
+  if (!ok) return;
+
+  const now = new Date();
+  const arrest = {
+    id: getNextId(), name: suspect, arrester, reason,
+    bail: PRICE, price: PRICE,
+    bookedAt: now.toISOString(),
+    releaseAt: new Date(now.getTime() + JAIL_MINS * 60000).toISOString(),
+    status: 'pending', duration: JAIL_MINS, source: 'customer',
+    deputy: null, warrantAt: null, arrestedAt: null
+  };
+
+  const arrests = getArrests();
+  arrests.push(arrest);
+  saveArrests(arrests);
+  currentSuccessId = arrest.id;
+
+  document.getElementById('c-mugshot').setAttribute('data-id', arrest.id);
+  document.getElementById('c-success-name').textContent = suspect.toUpperCase();
+  document.getElementById('c-form-body').style.display = 'none';
+  document.getElementById('c-success').classList.add('show');
+
+  updateStatusTracker(arrest);
+  updateTicker();
+  showToast('Warrant submitted!', 'customer');
+}
+
+function updateStatusTracker(arrest) {
+  if (!arrest) return;
+  const s = arrest.status;
+  const st0 = document.getElementById('st0');
+  const st1 = document.getElementById('st1');
+  const st2 = document.getElementById('st2');
+
+  // Reset
+  [st0,st1,st2].forEach(el => { el.classList.remove('done','active'); });
+
+  if (s === 'pending') {
+    st0.classList.add('done'); st0.textContent = '✓';
+    st1.classList.add('active'); st1.textContent = '2';
+    st2.textContent = '3';
+  } else if (s === 'warrant') {
+    st0.classList.add('done'); st0.textContent = '✓';
+    st1.classList.add('done'); st1.textContent = '✓';
+    st2.classList.add('active'); st2.textContent = '3';
+  } else if (['jailed','bailed','released'].includes(s)) {
+    st0.classList.add('done'); st0.textContent = '✓';
+    st1.classList.add('done'); st1.textContent = '✓';
+    st2.classList.add('done'); st2.textContent = '✓';
+  }
+}
+
+function pollSuccessStatus() {
+  if (!currentSuccessId) return;
+  const a = getArrests().find(x => x.id === currentSuccessId);
+  if (a) updateStatusTracker(a);
+}
+
+function resetCustomerForm() {
+  document.getElementById('c-suspect').value = '';
+  document.getElementById('c-arrester').value = '';
+  document.getElementById('c-reason').value = '';
+  document.getElementById('c-form-body').style.display = 'flex';
+  document.getElementById('c-form-body').style.flexDirection = 'column';
+  document.getElementById('c-form-body').style.gap = '22px';
+  document.getElementById('c-success').classList.remove('show');
+  currentSuccessId = null;
+}
+
+function updateTicker() {
+  const arrests = getArrests().filter(a => ['jailed','bailed','released','warrant'].includes(a.status));
+  if (!arrests.length) return;
+  document.getElementById('c-ticker-wrap').style.display = 'block';
+  const items = [...arrests, ...arrests].map(a =>
+    `<span class="ticker-item">🚔 <span class="tn">${a.name.toUpperCase()}</span> — arrested by ${a.arrester||'Admin'}</span>`
+  ).join('');
+  document.getElementById('c-ticker-inner').innerHTML = items;
+}
+
+// ── Admin clock ────────────────────────────────────
+function tickClock() {
+  const el = document.getElementById('adm-clock');
+  if (el) el.textContent = new Date().toLocaleTimeString('en-US',{hour12:false});
+}
+setInterval(tickClock, 1000); tickClock();
+
+// ── Deputies ───────────────────────────────────────
+function renderDeputies() {
+  const arrests = getArrests();
+  const list = document.getElementById('dep-list');
+  if (!list) return;
+
+  list.innerHTML = deputies.length === 0
+    ? `<div style="font-family:var(--mono);font-size:0.7rem;color:var(--adm-muted);letter-spacing:1px;">No deputies added yet</div>`
+    : deputies.map((d,i) => {
+        const cnt = arrests.filter(a => a.deputy === d && a.status === 'jailed').length;
+        return `<div class="dep-item">
+          <div class="dep-dot"></div>
+          <div class="dep-name">${d}</div>
+          <div class="dep-count">${cnt} active</div>
+          <button class="dep-rm" onclick="removeDeputy(${i})">✕</button>
+        </div>`;
+      }).join('');
+
+  // Sync selects
+  ['m-deputy'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const cv = sel.value;
+    sel.innerHTML = '<option value="">— None —</option>' + deputies.map(d=>`<option${d===cv?' selected':''}>${d}</option>`).join('');
+  });
+
+  // Pending card selects
+  document.querySelectorAll('.p-sel').forEach(s => {
+    const cv = s.value;
+    s.innerHTML = '<option value="">Assign deputy...</option>' + deputies.map(d=>`<option${d===cv?' selected':''}>${d}</option>`).join('');
+  });
+}
+
+function addDeputy() {
+  const inp = document.getElementById('new-deputy');
+  const name = inp.value.trim();
+  if (!name) return;
+  if (deputies.includes(name)) { showToast('Deputy already exists', 'admin'); return; }
+  deputies.push(name);
+  localStorage.setItem('deputies', JSON.stringify(deputies));
+  inp.value = '';
+  renderDeputies();
+  showToast(`✓ Deputy ${name} added`, 'admin');
+}
+
+function removeDeputy(i) {
+  deputies.splice(i,1);
+  localStorage.setItem('deputies', JSON.stringify(deputies));
+  renderDeputies();
+}
+
+// ── Manual book ────────────────────────────────────
+function manualBook() {
+  const name = document.getElementById('m-name').value.trim();
+  if (!name) { showToast('⚠ Enter name', 'admin'); return; }
+  const deputy = document.getElementById('m-deputy').value || null;
+  const reason = document.getElementById('m-reason').value.trim();
+  const now = new Date();
+
+  const arrest = {
+    id: getNextId(), name, deputy, reason,
+    arrester: 'Admin', bail: PRICE, price: PRICE,
+    bookedAt: now.toISOString(),
+    releaseAt: new Date(now.getTime() + JAIL_MINS * 60000).toISOString(),
+    status: 'jailed', duration: JAIL_MINS, source: 'admin',
+    warrantAt: now.toISOString(), arrestedAt: now.toISOString()
+  };
+
+  const arrests = getArrests(); arrests.push(arrest); saveArrests(arrests);
+  printLabel(arrest);
+  document.getElementById('m-name').value = '';
+  document.getElementById('m-reason').value = '';
+  renderAdmin();
+  showToast(`✓ ${arrest.name} booked as ${arrest.id}`, 'admin');
+}
+
+// ── Warrant flow ───────────────────────────────────
+// Stage 1: pending → warrant (assign deputy)
+function issueWarrant(id) {
+  const dep = document.getElementById('assign-' + id)?.value || null;
+  const arrests = getArrests();
+  const a = arrests.find(x => x.id === id);
+  if (!a) return;
+  a.status = 'warrant';
+  a.deputy = dep || null;
+  a.warrantAt = new Date().toISOString();
+  saveArrests(arrests);
+  renderAdmin();
+  showToast(`✓ Warrant issued for ${a.name}${dep?' — '+dep:''}`, 'admin');
+}
+
+// Stage 2: warrant → jailed (deputy confirms arrest)
+function confirmArrest(id) {
+  const arrests = getArrests();
+  const a = arrests.find(x => x.id === id);
+  if (!a) return;
+  const now = new Date();
+  a.status = 'jailed';
+  a.arrestedAt = now.toISOString();
+  a.bookedAt = now.toISOString();
+  a.releaseAt = new Date(now.getTime() + JAIL_MINS * 60000).toISOString();
+  saveArrests(arrests);
+  printLabel(a);
+  renderAdmin();
+  showToast(`🚔 ${a.name} ARRESTED — label printing`, 'admin');
+}
+
+function dismissArrest(id) {
+  const arrests = getArrests();
+  const i = arrests.findIndex(x => x.id === id);
+  if (i > -1) { arrests[i].status = 'dismissed'; saveArrests(arrests); renderAdmin(); showToast('Request dismissed', 'admin'); }
+}
+
+// Release / bail
+function releaseArrest(id, method) {
+  const arrests = getArrests();
+  const a = arrests.find(x => x.id === id);
+  if (!a) return;
+  a.status = method === 'bail' ? 'bailed' : 'released';
+  a.releasedAt = new Date().toISOString();
+  saveArrests(arrests);
+  renderAdmin();
+  showToast(`✓ ${a.name} ${method==='bail'?'BAILED OUT (+$'+PRICE+')':'RELEASED'}`, 'admin');
+}
+
+function reprintLabel(id) { const a = getArrests().find(x=>x.id===id); if(a) printLabel(a); }
+
+// ── Render pending ─────────────────────────────────
+function renderPending() {
+  const arrests = getArrests();
+  const queue = arrests.filter(a => ['pending','warrant'].includes(a.status)).reverse();
+
+  document.getElementById('tb-pending').textContent = queue.length;
+  const alert = document.getElementById('adm-alert');
+  queue.filter(a=>a.status==='pending').length > 0 ? alert.classList.add('show') : alert.classList.remove('show');
+
+  const container = document.getElementById('pending-list');
+  if (!container) return;
+
+  if (!queue.length) {
+    container.innerHTML = `<div class="empty-q"><span class="ico">📋</span><p>No pending requests</p></div>`;
+    return;
+  }
+
+  const depOpts = () => '<option value="">Assign deputy...</option>' + deputies.map(d=>`<option>${d}</option>`).join('');
+
+  container.innerHTML = queue.map(a => {
+    const isPending = a.status === 'pending';
+    const isWarrant = a.status === 'warrant';
+
+    // Progress steps
+    const p1 = 'done', p2 = isWarrant ? 'done' : (isPending ? 'active' : 'done'), p3 = isWarrant ? 'active' : '';
+
+    const actionBtn = isPending
+      ? `<button class="p-act-btn btn-warrant" onclick="issueWarrant('${a.id}')">⚖ ISSUE WARRANT</button>`
+      : `<button class="p-act-btn btn-confirm-arrest" onclick="confirmArrest('${a.id}')">🚔 CONFIRM ARREST</button>`;
+
+    return `<div class="p-card stage-${a.status}">
+      <div class="p-card-top">
+        <div>
+          <div class="p-name">${a.name.toUpperCase()}</div>
+          <div class="p-meta">By <span>${a.arrester||'Unknown'}</span> · <span>${fmt(a.bookedAt)}</span> · <span>${a.id}</span>${a.deputy?` · Deputy: <span>${a.deputy}</span>`:''}</div>
+        </div>
+        <span class="pill ${isPending?'pill-pending':'pill-warrant'}">${isPending?'⏳ PENDING':'⚖ WARRANT'}</span>
+      </div>
+      ${a.reason ? `<div class="p-reason">"${a.reason}"</div>` : ''}
+      <div class="p-progress">
+        <div class="p-prog-step done"></div>
+        <div class="p-prog-step ${isWarrant||!isPending?'done':'active'}"></div>
+        <div class="p-prog-step ${isWarrant?'active':''}"></div>
+      </div>
+      <div class="p-actions">
+        <select class="p-sel" id="assign-${a.id}">${depOpts()}</select>
+        ${actionBtn}
+        <button class="p-act-btn btn-dismiss" onclick="dismissArrest('${a.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Render table rows ─────────────────────────────
+function rowHTML(a, now, ctx) {
+  const msLeft = new Date(a.releaseAt) - now;
+  const active = a.status === 'jailed';
+  let cdHTML = '—', rowCls = '';
+
+  if (active) {
+    if (msLeft <= 0) {
+      const s = Math.abs(Math.floor(msLeft/1000));
+      cdHTML = `<span class="cd-over">+${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}</span>`;
+      rowCls = 'row-overdue';
+    } else {
+      const s = Math.floor(msLeft/1000);
+      cdHTML = `<span class="${s<120?'cd-warn':'cd-ok'}">${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}</span>`;
+    }
+  }
+
+  const statusLabel = {
+    pending:'⏳ PENDING', warrant:'⚖ WARRANT',
+    jailed: msLeft<=0?'⚠ OVERDUE':'⛓ JAILED',
+    bailed:'$ BAILED', released:'✓ RELEASED', dismissed:'— DISMISSED'
+  };
+  const statusPill = {
+    pending:'pill-pending', warrant:'pill-warrant',
+    jailed: msLeft<=0?'pill-overdue':'pill-jailed',
+    bailed:'pill-bailed', released:'pill-released', dismissed:'pill-released'
+  };
+
+  const acts = active
+    ? `<div class="acts">
+        <button class="ab ab-rel" onclick="releaseArrest('${a.id}','release')">Release</button>
+        <button class="ab ab-bail" onclick="releaseArrest('${a.id}','bail')">Bail</button>
+        <button class="ab ab-print" onclick="reprintLabel('${a.id}')">🖨</button>
+      </div>`
+    : ['pending','warrant'].includes(a.status)
+      ? `<button class="ab ab-bail" style="font-size:0.7rem" onclick="${a.status==='pending'?`issueWarrant('${a.id}')`:`confirmArrest('${a.id}')`}">${a.status==='pending'?'Issue Warrant':'Confirm'}</button>`
+      : `<span style="font-family:var(--mono);font-size:0.7rem;color:var(--adm-muted)">${a.releasedAt?fmt(a.releasedAt):''}</span>`;
+
+  const faded = ['released','bailed','dismissed'].includes(a.status) ? 'row-faded' : '';
+
+  if (ctx === 'active') {
+    return `<tr class="${rowCls}">
+      <td class="td-id">${a.id}</td>
+      <td class="td-name">${a.name}${a.reason?`<br><span class="td-sub">"${a.reason}"</span>`:''}</td>
+      <td class="td-dep">${a.deputy||'—'}</td>
+      <td class="td-t">${fmt(a.bookedAt)}</td>
+      <td class="td-t">${fmt(a.releaseAt)}</td>
+      <td class="td-cd">${cdHTML}</td>
+      <td><span class="pill ${statusPill[a.status]}">${statusLabel[a.status]}</span></td>
+      <td>${acts}</td>
+    </tr>`;
+  } else {
+    return `<tr class="${rowCls} ${faded}">
+      <td class="td-id">${a.id}</td>
+      <td class="td-name">${a.name}${a.reason?`<br><span class="td-sub">"${a.reason}"</span>`:''}</td>
+      <td class="td-dep">${a.arrester||'—'}</td>
+      <td class="td-dep">${a.deputy||'—'}</td>
+      <td class="td-t">${fmt(a.bookedAt)}</td>
+      <td class="td-t">${['pending','warrant'].includes(a.status)?'—':fmt(a.releaseAt)}</td>
+      <td><span class="pill ${statusPill[a.status]}">${statusLabel[a.status]}</span></td>
+      <td>${acts}</td>
+    </tr>`;
+  }
+}
+
+function renderActive() {
+  const arrests = getArrests(); const now = new Date();
+  let rows = arrests.filter(a => a.status === 'jailed').reverse();
+  if (activeFlt === 'overdue') rows = rows.filter(a => new Date(a.releaseAt) < now);
+  const tbody = document.getElementById('active-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = rows.length ? rows.map(a=>rowHTML(a,now,'active')).join('') :
+    `<tr><td colspan="8" style="text-align:center;padding:40px;font-family:var(--mono);font-size:0.7rem;letter-spacing:2px;color:var(--adm-muted);">NO INMATES IN CUSTODY</td></tr>`;
+  document.getElementById('active-footer').innerHTML = footerHTML(arrests);
+}
+
+function renderAllTab() {
+  const arrests = getArrests(); const now = new Date();
+  let rows = arrests.slice().reverse();
+  if (allFlt !== 'all') {
+    if (allFlt === 'overdue') rows = rows.filter(a => a.status==='jailed' && new Date(a.releaseAt)<now);
+    else rows = rows.filter(a => a.status === allFlt);
+  }
+  const tbody = document.getElementById('all-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = rows.length ? rows.map(a=>rowHTML(a,now,'all')).join('') :
+    `<tr><td colspan="8" style="text-align:center;padding:40px;font-family:var(--mono);font-size:0.7rem;letter-spacing:2px;color:var(--adm-muted);">NO RECORDS</td></tr>`;
+  document.getElementById('all-footer').innerHTML = footerHTML(arrests);
+}
+
+function footerHTML(arrests) {
+  const now = new Date();
+  const confirmed = arrests.filter(a=>['jailed','bailed','released'].includes(a.status));
+  const arrestRev = confirmed.length * PRICE;
+  const bailRev = arrests.filter(a=>a.status==='bailed').length * PRICE;
+  const total = arrestRev + bailRev;
+  const active = arrests.filter(a=>a.status==='jailed');
+  const overdue = active.filter(a=>new Date(a.releaseAt)<now);
+  return `
+    <div class="sf-stat"><div class="sf-val" style="color:var(--adm-green)">$${total}</div><div class="sf-lbl">Total Raised</div></div>
+    <div class="sf-stat"><div class="sf-val">${confirmed.length}</div><div class="sf-lbl">Arrests</div></div>
+    <div class="sf-stat"><div class="sf-val">${active.length}</div><div class="sf-lbl">In Custody</div></div>
+    <div class="sf-stat"><div class="sf-val" style="color:var(--adm-red)">${overdue.length}</div><div class="sf-lbl">Overdue</div></div>
+    <div class="sf-stat"><div class="sf-val">${arrests.filter(a=>a.status==='bailed').length}</div><div class="sf-lbl">Bailed Out</div></div>`;
+}
+
+function renderSideStats() {
+  const arrests = getArrests(); const now = new Date();
+  const confirmed = arrests.filter(a=>['jailed','bailed','released'].includes(a.status));
+  const total = confirmed.length * PRICE + arrests.filter(a=>a.status==='bailed').length * PRICE;
+  document.getElementById('s-raised').textContent = '$' + total;
+  document.getElementById('s-total').textContent = confirmed.length;
+  document.getElementById('s-active').textContent = arrests.filter(a=>a.status==='jailed').length;
+  document.getElementById('s-overdue').textContent = arrests.filter(a=>a.status==='jailed'&&new Date(a.releaseAt)<now).length;
+}
+
+function renderAdmin() {
+  renderPending(); renderActive(); renderAllTab();
+  renderSideStats(); renderDeputies();
+  document.getElementById('m-next-id').textContent = getNextId();
+}
+
+// ── Tabs / filters ─────────────────────────────────
+function switchTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  renderAdmin();
+}
+
+function setFlt(f, btn, ctx) {
+  if (ctx==='active') activeFlt=f; else allFlt=f;
+  btn.closest('.filter-bar').querySelectorAll('.flt').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAdmin();
+}
+
+// ── Print label ────────────────────────────────────
+function printLabel(a) {
+  const html = `<!DOCTYPE html><html><head>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+@page{size:2.3125in 4in;margin:0}
+body{width:2.3125in;height:4in;font-family:'Share Tech Mono',monospace;background:white;color:black;display:flex;flex-direction:column;overflow:hidden}
+.hdr{background:black;color:white;text-align:center;padding:6px 4px 4px}
+.hdr h1{font-family:'Bebas Neue',sans-serif;font-size:28pt;letter-spacing:4px;line-height:1}
+.hdr sub{font-size:6pt;letter-spacing:3px;opacity:.7;display:block;margin-top:2px}
+.bd{flex:1;padding:8px 10px;display:flex;flex-direction:column;gap:5px;border:3px solid black;border-top:none;margin:0 2px}
+.nm-blk{text-align:center;border-bottom:1px solid #ccc;padding-bottom:5px}
+.nm-lbl{font-size:6pt;letter-spacing:3px;color:#666;display:block;margin-bottom:2px}
+.nm{font-family:'Bebas Neue',sans-serif;font-size:22pt;letter-spacing:1px;line-height:1;word-break:break-word}
+.row{display:flex;justify-content:space-between;align-items:flex-end}
+.fld{display:flex;flex-direction:column;gap:1px}
+.fl{font-size:5.5pt;letter-spacing:2px;color:#666;text-transform:uppercase}
+.fv{font-size:9pt;font-weight:bold;letter-spacing:1px}
+.id-big{font-family:'Bebas Neue',sans-serif;font-size:19pt;letter-spacing:3px;text-align:right}
+.rel{background:black;color:white;padding:5px 8px;text-align:center;margin-top:auto}
+.rl{font-size:5.5pt;letter-spacing:3px;margin-bottom:1px;opacity:.7}
+.rt{font-family:'Bebas Neue',sans-serif;font-size:17pt;letter-spacing:2px}
+.ft{text-align:center;font-size:5.5pt;letter-spacing:2px;color:#999;padding:3px;border-top:1px solid #eee;margin:0 2px 2px}
+hr{border:none;border-top:1px dashed #ccc}
+</style></head><body>
+<div class="hdr"><h1>ARRESTED</h1><sub>CHARITY BAIL EVENT</sub></div>
+<div class="bd">
+  <div class="nm-blk"><span class="nm-lbl">SUSPECT</span><div class="nm">${a.name.toUpperCase()}</div></div>
+  <div class="row"><div class="fld"><span class="fl">Arrested</span><span class="fv">${fmt(a.bookedAt)}</span></div><div class="id-big">${a.id}</div></div>
+  <hr/>
+  <div class="row">
+    <div class="fld"><span class="fl">Deputy</span><span class="fv">${a.deputy||'—'}</span></div>
+    <div class="fld" style="text-align:right"><span class="fl">Bail</span><span class="fv">$${PRICE}.00</span></div>
+  </div>
+  <div class="rel"><div class="rl">RELEASE TIME</div><div class="rt">${fmt(a.releaseAt)}</div></div>
+</div>
+<div class="ft">PAY BAIL AT MAIN DESK · CHARITY EVENT</div>
+</body></html>`;
+
+  const f = document.getElementById('print-frame');
+  f.contentWindow.document.open();
+  f.contentWindow.document.write(html);
+  f.contentWindow.document.close();
+  setTimeout(() => { try { f.contentWindow.print(); } catch(e){} }, 600);
+}
+
+// ── Toast ──────────────────────────────────────────
+function showToast(msg, type='admin') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── Polling ────────────────────────────────────────
+let lastPending = 0;
+function poll() {
+  const c = getArrests().filter(a=>a.status==='pending').length;
+  if (c > lastPending && currentTab !== 'pending') showToast(`⚠ ${c} new request${c>1?'s':''}!`, 'admin');
+  lastPending = c;
+  if (document.getElementById('screen-admin').style.display !== 'none') renderAdmin();
+  pollSuccessStatus();
+  updateTicker();
+}
+
+setInterval(poll, 3000);
+
+// ── Init ───────────────────────────────────────────
+document.getElementById('m-name')?.addEventListener('keydown', e => { if(e.key==='Enter') manualBook(); });
+showCustomer();
+</script>
+</body>
+</html>
